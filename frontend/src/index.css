@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: toggling `dark` on <html> (see ThemeContext, added
+   in a later phase) switches the whole app instead of following the OS. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+}
