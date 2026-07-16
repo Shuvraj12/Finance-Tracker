@@ -6,7 +6,7 @@ a React (Vite) frontend.
 
 ## Tech Stack
 
-**Backend** — Java 25 · Spring Boot 3.5 · Spring Security · JWT · Spring Data JPA · Hibernate · MySQL · Maven
+**Backend** — Java 17 · Spring Boot 3.5 · Spring Security · JWT · Spring Data JPA · Hibernate · MySQL · Maven
 **Frontend** — React 19 (Vite) · Tailwind CSS v4 · React Router · Axios · Recharts
 
 ## Status
@@ -14,8 +14,8 @@ a React (Vite) frontend.
 Built in phases, each one runnable and reviewed before the next starts.
 
 - [x] Phase 1 — Project setup, folder structure, dependencies, DB config
-- [ ] Phase 2 — Authentication (register, login, JWT, BCrypt)
-- [ ] Phase 3 — Transactions (CRUD)
+- [x] Phase 2 — Authentication (register, login, JWT, BCrypt)
+- [x] Phase 3 — Transactions (CRUD)
 - [ ] Phase 4 — Budget
 - [ ] Phase 5 — Dashboard (summary cards, charts)
 - [ ] Phase 6 — Reports (filters, trends)
@@ -51,7 +51,7 @@ finance-tracker/
 ## Getting Started
 
 ### Prerequisites
-- Java 25
+- Java 17
 - Maven 3.9+
 - Node.js 20+
 - MySQL 8+
@@ -78,10 +78,11 @@ Runs on **http://localhost:5173**.
 
 ## Notes on version choices
 
-- **Spring Boot 3.5.16** — the final patch on the 3.x line (3.x reached
-  OSS end-of-life on 2026-06-30). Spring Boot 4.1 is current if you'd rather
-  build on that instead — it's a version bump plus some Spring Security
-  config changes, not a rewrite, so it's easy to switch to before Phase 2.
+- **Spring Boot 3.5.16 on Java 17** — the final patch on the 3.x line (3.x
+  reached OSS end-of-life on 2026-06-30) targeting Java 17, Spring Boot 3's
+  original baseline JDK. Spring Boot 4.1 is current if you'd rather move to
+  that line later - it's a version bump plus some Spring Security config
+  changes, not a rewrite.
 - **Tailwind CSS v4** — configured via the `@tailwindcss/vite` plugin
   (no `tailwind.config.js`/PostCSS needed); theme and dark-mode variant
   live directly in `src/index.css`.
@@ -90,4 +91,4 @@ Runs on **http://localhost:5173**.
 
 ## License
 
-This project is open-source and available for learning and educational purposes.
+Add a license (MIT is a common default for portfolio projects) once you push this to GitHub.
