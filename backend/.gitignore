@@ -1,0 +1,26 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IDE ###
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+out/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Secrets / local overrides - never commit real credentials ###
+.env
+application-local.yml
+application-local.properties

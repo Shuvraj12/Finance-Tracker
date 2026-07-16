@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: finance-tracker-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/finance_tracker?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      # 'update' is convenient for development. For a real production deploy,
+      # switch to a migration tool (Flyway/Liquibase) and set this to 'validate'.
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 8080
+
+# Used by the JWT filter/service (Phase 2).
+# Always override jwt.secret via an environment variable outside local dev -
+# it should be a random value at least 256 bits (32 bytes) long.
+jwt:
+  secret: ${JWT_SECRET:dev-only-secret-change-me-to-a-long-random-value-before-anything-real}
+  expiration-ms: 86400000 # 24 hours
+
+app:
+  cors:
+    # Comma-separated if you ever need more than one origin (e.g. a deployed
+    # frontend URL alongside localhost).
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
