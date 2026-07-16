@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex,
                                                           HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCategory(InvalidCategoryException ex,
+                                                                 HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadable(HttpMessageNotReadableException ex,
+                                                            HttpServletRequest request) {
+        // Catches things like an invalid enum string (e.g. transactionType:
+        // "FOOBAR") - that fails during JSON deserialization, before Bean
+        // Validation ever runs, so it needs its own handler.
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request",
+                "Malformed request body - check that all fields have valid values", request);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
