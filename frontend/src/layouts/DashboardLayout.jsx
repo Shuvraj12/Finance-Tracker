@@ -18,7 +18,7 @@ function DashboardLayout() {
           <span className="font-semibold tracking-tight">Finance Tracker</span>
           <nav className="flex items-center gap-2">
             <NavLink to="/" end className={linkClasses}>
-              Home
+              Dashboard
             </NavLink>
             <NavLink to="/transactions" className={linkClasses}>
               Transactions
