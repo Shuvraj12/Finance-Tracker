@@ -2,6 +2,7 @@ package com.financetracker.exception;
 
 import com.financetracker.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCategoryException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCategory(InvalidCategoryException ex,
                                                                  HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(BudgetAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleBudgetExists(BudgetAlreadyExistsException ex,
+                                                              HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex,
+                                                                     HttpServletRequest request) {
+        // Fires for @RequestParam/@PathVariable constraints (e.g. Budget's
+        // ?month=13) - different exception type than @RequestBody validation
+        // because Spring validates those through a different code path.
         return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request);
     }
 
