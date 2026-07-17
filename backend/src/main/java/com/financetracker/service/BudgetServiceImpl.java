@@ -12,6 +12,7 @@ import com.financetracker.repository.TransactionRepository;
 import com.financetracker.repository.UserRepository;
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +28,19 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<BudgetResponse> findBudget(Long userId, Integer month, Integer year) {
+        YearMonth target = resolveYearMonth(month, year);
+        return budgetRepository.findByUserIdAndMonthAndYear(userId, target.getMonthValue(), target.getYear())
+                .map(budget -> buildResponse(budget, userId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public BudgetResponse getBudget(Long userId, Integer month, Integer year) {
         YearMonth target = resolveYearMonth(month, year);
-        Budget budget = budgetRepository
-                .findByUserIdAndMonthAndYear(userId, target.getMonthValue(), target.getYear())
+        return findBudget(userId, month, year)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No budget set for " + target.getMonthValue() + "/" + target.getYear()));
-        return buildResponse(budget, userId);
     }
 
     @Override
