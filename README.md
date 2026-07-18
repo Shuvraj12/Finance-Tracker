@@ -18,7 +18,7 @@ Built in phases, each one runnable and reviewed before the next starts.
 - [x] Phase 3 — Transactions (CRUD)
 - [x] Phase 4 — Budget
 - [x] Phase 5 — Dashboard (summary cards, charts)
-- [ ] Phase 6 — Reports (filters, trends)
+- [x] Phase 6 — Reports (filters, trends)
 - [ ] Phase 7 — User profile
 - [ ] Phase 8 — Polish + full documentation
 
@@ -91,4 +91,4 @@ Runs on **http://localhost:5173**.
 
 ## License
 
-Add a license (MIT is a common default for portfolio projects) once you push this to GitHub.
+This project is open-source and available for learning and educational purposes.
