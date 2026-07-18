@@ -26,6 +26,9 @@ function DashboardLayout() {
             <NavLink to="/budget" className={linkClasses}>
               Budget
             </NavLink>
+            <NavLink to="/reports" className={linkClasses}>
+              Reports
+            </NavLink>
             <button
               onClick={logout}
               className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
