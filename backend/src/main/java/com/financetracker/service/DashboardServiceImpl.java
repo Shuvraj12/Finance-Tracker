@@ -7,12 +7,10 @@ import com.financetracker.dto.MonthlyTrend;
 import com.financetracker.dto.TransactionResponse;
 import com.financetracker.entity.TransactionType;
 import com.financetracker.repository.TransactionRepository;
+import com.financetracker.util.MonthlyTrendCalculator;
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +24,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     private final TransactionRepository transactionRepository;
     private final BudgetService budgetService;
+    private final MonthlyTrendCalculator monthlyTrendCalculator;
 
     @Override
     public DashboardResponse getDashboard(Long userId) {
@@ -52,7 +51,7 @@ public class DashboardServiceImpl implements DashboardService {
                 .sumByCategoryForUserAndTypeAndDateBetween(
                         userId, TransactionType.EXPENSE, currentMonth.atDay(1), currentMonth.atEndOfMonth());
 
-        List<MonthlyTrend> monthlyTrend = buildMonthlyTrend(userId, currentMonth);
+        List<MonthlyTrend> monthlyTrend = monthlyTrendCalculator.calculate(userId, TREND_MONTHS);
 
         return new DashboardResponse(totalBalance, totalIncome, totalExpenses, savings, budget,
                 recentTransactions, expenseByCategory, monthlyTrend);
@@ -61,17 +60,5 @@ public class DashboardServiceImpl implements DashboardService {
     private BigDecimal sumForMonth(Long userId, TransactionType type, YearMonth month) {
         return transactionRepository.sumByUserIdAndTransactionTypeAndDateBetween(
                 userId, type, month.atDay(1), month.atEndOfMonth());
-    }
-
-    private List<MonthlyTrend> buildMonthlyTrend(Long userId, YearMonth currentMonth) {
-        List<MonthlyTrend> trend = new ArrayList<>();
-        for (int i = TREND_MONTHS - 1; i >= 0; i--) {
-            YearMonth ym = currentMonth.minusMonths(i);
-            BigDecimal income = sumForMonth(userId, TransactionType.INCOME, ym);
-            BigDecimal expenses = sumForMonth(userId, TransactionType.EXPENSE, ym);
-            String label = ym.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + ym.getYear();
-            trend.add(new MonthlyTrend(ym.getMonthValue(), ym.getYear(), label, income, expenses));
-        }
-        return trend;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -66,6 +67,17 @@ public class GlobalExceptionHandler {
         // ?month=13) - different exception type than @RequestBody validation
         // because Spring validates those through a different code path.
         return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                              HttpServletRequest request) {
+        // Fires for something like Reports' ?period=blah - an enum query
+        // param that doesn't match any constant. Yet another exception type,
+        // because Spring's argument-binding and Bean Validation are two
+        // separate pipelines that fail differently.
+        String message = "Invalid value '" + ex.getValue() + "' for parameter '" + ex.getName() + "'";
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", message, request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
