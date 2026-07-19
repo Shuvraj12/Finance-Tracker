@@ -19,7 +19,7 @@ Built in phases, each one runnable and reviewed before the next starts.
 - [x] Phase 4 — Budget
 - [x] Phase 5 — Dashboard (summary cards, charts)
 - [x] Phase 6 — Reports (filters, trends)
-- [ ] Phase 7 — User profile
+- [x] Phase 7 — User profile
 - [ ] Phase 8 — Polish + full documentation
 
 ## Project Structure
