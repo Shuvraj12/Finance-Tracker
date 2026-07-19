@@ -1,6 +1,7 @@
 package com.financetracker.security;
 
 import com.financetracker.repository.UserRepository;
+import com.financetracker.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmail(EmailNormalizer.normalize(email))
                 .map(UserPrincipal::new)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found with email: " + email));
     }
 }
+

@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,10 +52,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        } catch (JwtException | IllegalArgumentException ex) {
-            // Malformed/expired token - leave the request unauthenticated and
-            // let Spring Security reject it further down the chain (401/403)
-            // rather than raising a 500 here.
+        } catch (JwtException | IllegalArgumentException | UsernameNotFoundException ex) {
+            // Malformed/expired token, OR a well-formed token whose subject
+            // no longer resolves to a real user (renamed away via profile
+            // update, or the account was deleted) - either way, leave the
+            // request unauthenticated and let Spring Security reject it
+            // further down the chain (401/403) rather than raising a 500.
             SecurityContextHolder.clearContext();
         }
 

@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     Optional<Budget> findByUserIdAndMonthAndYear(Long userId, Integer month, Integer year);
+
+    void deleteByUserId(Long userId);
 }

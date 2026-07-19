@@ -8,6 +8,7 @@ import com.financetracker.exception.EmailAlreadyExistsException;
 import com.financetracker.repository.UserRepository;
 import com.financetracker.security.JwtService;
 import com.financetracker.security.UserPrincipal;
+import com.financetracker.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,14 +27,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new EmailAlreadyExistsException(
-                    "An account with email " + request.email() + " already exists");
+        String email = EmailNormalizer.normalize(request.email());
+
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException("An account with email " + email + " already exists");
         }
 
         User user = User.builder()
                 .name(request.name())
-                .email(request.email())
+                .email(email)
                 .password(passwordEncoder.encode(request.password()))
                 .build();
 
@@ -52,11 +54,13 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("No user found with email: " + request.email()));
+        String email = EmailNormalizer.normalize(request.email());
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with email: " + email));
 
         String token = jwtService.generateToken(new UserPrincipal(user));
 
         return new AuthResponse(token, user.getId(), user.getName(), user.getEmail());
     }
 }
+

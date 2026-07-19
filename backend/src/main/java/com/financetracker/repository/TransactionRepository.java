@@ -31,6 +31,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Optional<Transaction> findByIdAndUserId(Long id, Long userId);
 
     /**
+     * Backs account deletion. This is a derived delete method (no @Query),
+     * so Spring Data handles it as find-then-remove-each through the
+     * persistence context rather than a raw bulk DELETE - no @Modifying
+     * needed here, unlike an explicit @Query("DELETE FROM ...").
+     */
+    void deleteByUserId(Long userId);
+
+    /**
      * All-time total for a type - backs the dashboard's Total Balance /
      * Total Income / Total Expenses cards.
      */
