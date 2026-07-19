@@ -1,5 +1,6 @@
 import { createContext, useCallback, useState } from 'react'
 import { authService } from '../services/authService'
+import { profileService } from '../services/profileService'
 import { tokenStorage } from '../utils/storage'
 
 export const AuthContext = createContext(null)
@@ -61,6 +62,28 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  // Deliberately thin - no loading/error state of their own, unlike
+  // login/register above. Profile.jsx manages its own submitting/error
+  // state around these calls, the same way Transactions and Budget manage
+  // their own state around their service calls, rather than every screen
+  // sharing one global loading/error flag.
+  const updateProfile = useCallback(
+    async (data) => {
+      const response = await profileService.update(data)
+      persistSession(response)
+      return response
+    },
+    [persistSession],
+  )
+
+  const deleteAccount = useCallback(
+    async (data) => {
+      await profileService.deleteAccount(data)
+      logout()
+    },
+    [logout],
+  )
+
   const value = {
     user,
     isAuthenticated: !!user,
@@ -69,6 +92,8 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    updateProfile,
+    deleteAccount,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

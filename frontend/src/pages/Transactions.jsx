@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import TransactionForm from '../components/TransactionForm'
 import TransactionList from '../components/TransactionList'
 import { transactionService } from '../services/transactionService'
@@ -9,6 +9,7 @@ function Transactions() {
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState(null)
+  const formRef = useRef(null)
 
   const loadTransactions = useCallback(async () => {
     setLoading(true)
@@ -26,6 +27,16 @@ function Transactions() {
   useEffect(() => {
     loadTransactions()
   }, [loadTransactions])
+
+  // The form sits above a table that can run well past the fold. Without
+  // this, clicking Edit on a row further down silently updates a form
+  // that's scrolled out of view - which looks exactly like the button
+  // doing nothing.
+  useEffect(() => {
+    if (editingTransaction) {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [editingTransaction])
 
   const handleSubmit = async (formValues) => {
     setSubmitting(true)
@@ -65,7 +76,10 @@ function Transactions() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+      <div
+        ref={formRef}
+        className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900"
+      >
         <h2 className="mb-4 text-sm font-semibold">
           {editingTransaction ? 'Edit transaction' : 'Add a transaction'}
         </h2>

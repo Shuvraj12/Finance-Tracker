@@ -5,23 +5,36 @@ import { formatCategory } from '../utils/formatters'
 const inputClasses =
   'w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500'
 
-function emptyForm() {
+// Maps a transaction from the API (or nothing, for "add" mode) into the
+// form's own shape - kept separate from the API response shape so a null
+// note, or any future extra field like id/createdAt, can't leak into a
+// controlled input's value.
+function toFormValues(transaction) {
+  if (!transaction) {
+    return {
+      transactionType: 'EXPENSE',
+      category: 'FOOD',
+      amount: '',
+      date: new Date().toISOString().slice(0, 10),
+      note: '',
+    }
+  }
   return {
-    transactionType: 'EXPENSE',
-    category: 'FOOD',
-    amount: '',
-    date: new Date().toISOString().slice(0, 10),
-    note: '',
+    transactionType: transaction.transactionType,
+    category: transaction.category,
+    amount: transaction.amount,
+    date: transaction.date,
+    note: transaction.note ?? '',
   }
 }
 
 function TransactionForm({ initialValue, onSubmit, onCancel, submitting }) {
-  const [form, setForm] = useState(() => initialValue ?? emptyForm())
+  const [form, setForm] = useState(() => toFormValues(initialValue))
 
   // Re-sync whenever we switch between "add" and "edit", or between editing
   // different rows.
   useEffect(() => {
-    setForm(initialValue ?? emptyForm())
+    setForm(toFormValues(initialValue))
   }, [initialValue])
 
   const categories = categoriesFor(form.transactionType)
