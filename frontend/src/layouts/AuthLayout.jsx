@@ -1,6 +1,11 @@
+import ThemeToggle from '../components/ThemeToggle'
+
 function AuthLayout({ title, subtitle, children }) {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="fixed right-4 top-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-sm">
         <h1 className="text-2xl font-semibold tracking-tight text-center">{title}</h1>
         {subtitle && (

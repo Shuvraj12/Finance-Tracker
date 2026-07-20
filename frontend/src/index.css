@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* Class-based dark mode: toggling `dark` on <html> (see ThemeContext, added
-   in a later phase) switches the whole app instead of following the OS. */
+/* Class-based dark mode: toggling `dark` on <html> (see context/ThemeContext.jsx
+   and the inline script in index.html) switches the whole app rather than
+   following the OS setting live. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {

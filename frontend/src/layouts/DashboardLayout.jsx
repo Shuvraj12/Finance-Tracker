@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import ThemeToggle from '../components/ThemeToggle'
 
 function DashboardLayout() {
   const { logout } = useAuth()
@@ -32,6 +33,8 @@ function DashboardLayout() {
             <NavLink to="/profile" className={linkClasses}>
               Profile
             </NavLink>
+            <span className="mx-1 h-5 w-px bg-gray-200 dark:bg-gray-800" aria-hidden="true" />
+            <ThemeToggle />
             <button
               onClick={logout}
               className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
